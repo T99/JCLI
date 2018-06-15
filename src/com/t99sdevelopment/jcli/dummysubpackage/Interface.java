@@ -49,9 +49,15 @@ public class Interface implements Runnable {
 				
 				isConnected = true;
 				if (!interfaceThread.isAlive()) interfaceThread.start();
+				ConsoleManager.printDebug(name + " interface successfully connected.");
 				return true;
 				
-			} else return false;
+			} else {
+				
+				ConsoleManager.printDebug(name + " interface failed to connect.");
+				return false;
+				
+			}
 			
 		}
 	
@@ -62,28 +68,13 @@ public class Interface implements Runnable {
 		if (isConnected) {
 			
 			isConnected = false;
-			if (interfaceThread.isAlive()) {
-				
-				interfaceThread.interrupt();
-				System.out.println("hello!");
-				
-//				try {
-//
-//					//interfaceThread.join();
-//
-//
-//				} catch (InterruptedException e) {
-//
-//					e.printStackTrace();
-//
-//				}
-				
-			}
-			
+			InterfaceManager.removeCurrentInterface(this);
+			ConsoleManager.printDebug(name + " interface successfully disconnected.");
 			return true;
 			
 		} else {
 			
+			ConsoleManager.printDebug(name + " interface failed to disconnect.");
 			return false;
 			
 		}
@@ -151,9 +142,8 @@ public class Interface implements Runnable {
 	
 		while (isConnected) {
 			
-			System.out.print(name + " ~> ");
+			ConsoleManager.printPrompt(this);
 			CommandInterpreter.interpret(input.nextLine());
-			//System.out.println(name + " interface received: " + input.nextLine());
 			
 		}
 	

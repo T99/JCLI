@@ -11,6 +11,10 @@ public class CommandInterpreter {
 		String command = input[0];
 		String[] args = Arrays.copyOfRange(input, 1, input.length);
 		
+		ConsoleManager.printDebug("The CommandInterpreter received the raw input: '" + inputString + "'.");
+		ConsoleManager.printDebug("The CommandInterpreter derived the command as: '" + command + "'.");
+		// TODO - Add args to debug?
+		
 		return CommandManager.invoke(command, args);
 		
 	}

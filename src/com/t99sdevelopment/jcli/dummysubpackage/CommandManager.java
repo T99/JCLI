@@ -21,6 +21,7 @@ public class CommandManager {
 		for (String invocationString: command.getInvocationStrings()) {
 			
 			commandMap.put(invocationString, command);
+			ConsoleManager.printDebug("The CommandManager stored the '" + command.getClass().getSimpleName() + "' with the '" + invocationString + "' invocation string.");
 			
 		}
 		
@@ -30,19 +31,16 @@ public class CommandManager {
 		
 		if (commandMap.containsKey(inputCommand)) {
 			
-			try {
-				
-				commandMap.get(inputCommand).execute(args);
-				
-			} catch (Exception e) {
-				
-				System.out.println("ERROR: " + e.getMessage());
-				
-			}
-			
+			commandMap.get(inputCommand).execute(args);
+			ConsoleManager.printDebug("The CommandManager successfully invoked the '" + commandMap.get(inputCommand).getClass().getSimpleName() + "' command with the '" + inputCommand + "' invocation string.");
 			return true;
 			
-		} else return false;
+		} else {
+			
+			ConsoleManager.printError("A command with the invocation string: '" + inputCommand + "' does not exit.");
+			return false;
+			
+		}
 		
 	}
 	

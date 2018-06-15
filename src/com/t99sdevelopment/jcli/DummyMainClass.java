@@ -1,9 +1,6 @@
 package com.t99sdevelopment.jcli;
 
-import com.t99sdevelopment.jcli.dummysubpackage.CommandInterpreter;
-import com.t99sdevelopment.jcli.dummysubpackage.CommandManager;
-import com.t99sdevelopment.jcli.dummysubpackage.Interface;
-import com.t99sdevelopment.jcli.dummysubpackage.InterfaceFactory;
+import com.t99sdevelopment.jcli.dummysubpackage.*;
 
 public class DummyMainClass {
 
@@ -14,10 +11,8 @@ public class DummyMainClass {
 	public static void main(String[] args) {
 		
 		CommandManager.registerAllCommands();
-		
-		if (inter1.connect()) System.out.println("Interface connected.");
-		else System.out.println("Interface did not connect.");
-		
+		inter1.connect();
+//
 //		String[] strings = CommandInterpreter.groupDelimitedStrings(CommandInterpreter.normalize("How 'is everyone' \"doing\" `today my` guys?"));
 //		for (String s: strings) System.out.println(s);
 		

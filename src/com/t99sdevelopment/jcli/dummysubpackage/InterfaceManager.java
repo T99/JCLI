@@ -1,5 +1,7 @@
 package com.t99sdevelopment.jcli.dummysubpackage;
 
+import com.t99sdevelopment.jcli.dummysubpackage.exceptions.InterfaceDoesNotExistException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,10 +12,16 @@ public class InterfaceManager {
 	
 	static boolean registerNewInterface(String name, Interface i) {
 		
-		if (interfaceMap.containsKey(name)) return false;
+		if (interfaceMap.containsKey(name)) {
+			
+			ConsoleManager.printDebug("The InterfaceManager failed to register a new Interface with the name: '" + name + "' due to that name being a duplicate.");
+			return false;
+			
+		}
 		else {
 			
 			interfaceMap.put(name, i);
+			ConsoleManager.printDebug("The InterfaceManager successfully registered a new Interface with the name: '" + name + "'.");
 			return true;
 			
 		}
@@ -26,9 +34,15 @@ public class InterfaceManager {
 			
 			interfaceMap.put(newName, interfaceMap.get(oldName));
 			interfaceMap.remove(oldName);
+			ConsoleManager.printDebug("The InterfaceManager renamed the '" + oldName + "' Interface to '" + newName + "'.");
 			return true;
 			
-		} else return false;
+		} else {
+			
+			ConsoleManager.printDebug("The InterfaceManager failed to rename an Interface because it could not find an Interface by the name: '" + oldName + "'.");
+			return false;
+			
+		}
 		
 	}
 	
@@ -50,32 +64,37 @@ public class InterfaceManager {
 		
 	}
 	
-	public static Interface getInterfaceForName(String name) throws IllegalArgumentException {
+	public static Interface getInterfaceForName(String name) throws InterfaceDoesNotExistException {
 		
 		if (interfaceMap.containsKey(name)) return interfaceMap.get(name);
-		else throw new IllegalArgumentException("An interface with the name '" + name + "' does not exist in the interface registry.");
+		else throw new InterfaceDoesNotExistException("An interface with the name '" + name + "' does not exist in the interface registry.");
 		
 	}
 	
 	static boolean setCurrentInterface(Interface i) {
 		
-		if (currentInterface != null && currentInterface.equals(i)) return false;
-		else {
+		if (currentInterface != null && currentInterface.equals(i)) { // Just leave this line. This is correct.
 			
-			if (currentInterface == null) {
-				
-				currentInterface = i;
-				return true;
-				
-			} else if (currentInterface.doesAllowSuggestedYield()) {
-				
-				currentInterface.suggestYield();
-				currentInterface = i;
-				return true;
-				
-			} else return false;
+			ConsoleManager.printDebug("The InterfaceManager failed to update the current Interface because the given '" + i.getName() + "' Interface was already the current Interface.");
+			return false;
 			
 		}
+		
+		if (currentInterface == null) {
+			
+			currentInterface = i;
+			ConsoleManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
+			return true;
+			
+		} else if (currentInterface.doesAllowSuggestedYield()) {
+			
+			currentInterface.suggestYield(); // TODO - I'm not even sure I need this functionality anymore :\
+			ConsoleManager.printDebug("The InterfaceManager suggested that the '" + currentInterface.getName() + "' Interface yield to the '" + i.getName() + "' Interface.");
+			currentInterface = i;
+			ConsoleManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
+			return true;
+			
+		} else return false;
 		
 	}
 	
@@ -84,9 +103,15 @@ public class InterfaceManager {
 		if (currentInterface.equals(i)) {
 			
 			currentInterface = null;
+			ConsoleManager.printDebug("The InterfaceManager removed the '" + i.getName() + "' Interface as the current Interface.");
 			return true;
 			
-		} else return false;
+		} else {
+			
+			ConsoleManager.printDebug("The InterfaceManager failed to remove the '" + i.getName() + "' Interface as the current Interface because it was not the current Interface.");
+			return false;
+			
+		}
 		
 	}
 	
