@@ -1,7 +1,9 @@
 package com.t99sdevelopment.jcli.dummysubpackage;
 
+import com.t99sdevelopment.jcli.dummysubpackage.commands.Arguments;
 import com.t99sdevelopment.jcli.dummysubpackage.commands.Command;
-import com.t99sdevelopment.jcli.dummysubpackage.commands.SwitchInterfaceCommand;
+import com.t99sdevelopment.jcli.dummysubpackage.commands.ExitCommand;
+import com.t99sdevelopment.jcli.dummysubpackage.commands.InterfaceCommand;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -12,7 +14,8 @@ public class CommandManager {
 	
 	public static void registerAllCommands() {
 		
-		registerCommand(new SwitchInterfaceCommand());
+		registerCommand(new InterfaceCommand());
+		registerCommand(new ExitCommand());
 		
 	}
 	
@@ -27,7 +30,7 @@ public class CommandManager {
 		
 	}
 	
-	static boolean invoke(String inputCommand, String[] args) {
+	static boolean invoke(String inputCommand, Arguments args) {
 		
 		if (commandMap.containsKey(inputCommand)) {
 			
@@ -37,7 +40,7 @@ public class CommandManager {
 			
 		} else {
 			
-			ConsoleManager.printError("A command with the invocation string: '" + inputCommand + "' does not exit.");
+			ConsoleManager.printError("A command with the invocation string '" + inputCommand + "' does not exist.");
 			return false;
 			
 		}

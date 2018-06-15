@@ -1,6 +1,6 @@
-package com.t99sdevelopment.jcli.dummysubpackage;
+package com.t99sdevelopment.jcli.dummysubpackage.util;
 
-public class ConsoleTextStylizer {
+public class TextStylizer {
 	
 	public static String getStylizedText(String string, Color color) {
 		
@@ -69,19 +69,19 @@ public class ConsoleTextStylizer {
 			
 		}
 		
-		String getColorCode() {
+		public String getColorCode() {
 			
 			return colorCode;
 			
 		}
 		
-		Color getIntensityShiftedVersion() {
+		public Color getIntensityShiftedVersion() {
 			
-			return getIntesityShiftedVersion(this);
+			return getIntensityShiftedVersion(this);
 			
 		}
 		
-		static Color getIntesityShiftedVersion(Color color) {
+		public static Color getIntensityShiftedVersion(Color color) {
 			
 			switch (color) {
 				

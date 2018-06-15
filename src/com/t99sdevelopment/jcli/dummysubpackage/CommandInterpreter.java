@@ -1,5 +1,7 @@
 package com.t99sdevelopment.jcli.dummysubpackage;
 
+import com.t99sdevelopment.jcli.dummysubpackage.commands.Arguments;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,7 +11,7 @@ public class CommandInterpreter {
 		
 		String[] input = groupDelimitedStrings(normalize(inputString));
 		String command = input[0];
-		String[] args = Arrays.copyOfRange(input, 1, input.length);
+		Arguments args = new Arguments(Arrays.copyOfRange(input, 1, input.length));
 		
 		ConsoleManager.printDebug("The CommandInterpreter received the raw input: '" + inputString + "'.");
 		ConsoleManager.printDebug("The CommandInterpreter derived the command as: '" + command + "'.");

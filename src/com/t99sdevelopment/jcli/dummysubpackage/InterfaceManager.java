@@ -10,7 +10,7 @@ public class InterfaceManager {
 	private static Interface currentInterface = null;
 	private static Map<String, Interface> interfaceMap = new HashMap<>();
 	
-	static boolean registerNewInterface(String name, Interface i) {
+	public static boolean registerInterface(String name, Interface i) {
 		
 		if (interfaceMap.containsKey(name)) {
 			
@@ -23,6 +23,23 @@ public class InterfaceManager {
 			interfaceMap.put(name, i);
 			ConsoleManager.printDebug("The InterfaceManager successfully registered a new Interface with the name: '" + name + "'.");
 			return true;
+			
+		}
+		
+	}
+	
+	public static boolean deregisterInterface(String name) {
+		
+		if (interfaceMap.containsKey(name)) {
+			
+			interfaceMap.remove(name);
+			ConsoleManager.printDebug("InterfaceManager successfully removed the '" + name + "' Interface from the registry.");
+			return true;
+			
+		} else {
+			
+			ConsoleManager.printDebug("InterfaceManager failed to removed the '" + name + "' Interface from the registry because it did not exist.");
+			return false;
 			
 		}
 		
@@ -46,13 +63,13 @@ public class InterfaceManager {
 		
 	}
 	
-	static boolean checkInterfaceRegistration(String name) {
+	public static boolean checkInterfaceRegistration(String name) {
 		
 		return interfaceMap.containsKey(name);
 		
 	}
 	
-	static boolean checkInterfaceRegistration(String name, Interface i) {
+	public static boolean checkInterfaceRegistration(String name, Interface i) {
 		
 		return (interfaceMap.containsKey(name) && interfaceMap.get(name).equals(i));
 		
@@ -68,6 +85,12 @@ public class InterfaceManager {
 		
 		if (interfaceMap.containsKey(name)) return interfaceMap.get(name);
 		else throw new InterfaceDoesNotExistException("An interface with the name '" + name + "' does not exist in the interface registry.");
+		
+	}
+	
+	public static String[] getAllRegisteredInterfaces() {
+		
+		return interfaceMap.keySet().toArray(new String[0]);
 		
 	}
 	

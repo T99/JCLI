@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Interface implements Runnable {
 	
-	private final Thread interfaceThread;
+	private Thread interfaceThread;
 	private String name;
 	private volatile boolean isConnected = false;
 	private final boolean allowSuggestedYield;
@@ -35,7 +35,9 @@ public class Interface implements Runnable {
 		this.name = name;
 		this.allowSuggestedYield = allowSuggestedYield;
 		input = new Scanner(System.in);
-		InterfaceManager.registerNewInterface(name, this);
+		InterfaceManager.registerInterface(name, this);
+		
+		// We have to instantiate the Thread here, otherwise we can get NullPointerExceptions down the line.
 		interfaceThread = new Thread(this, "'" + name + "' Interface");
 		
 	}
@@ -48,8 +50,8 @@ public class Interface implements Runnable {
 			if (InterfaceManager.setCurrentInterface(this)) {
 				
 				isConnected = true;
-				if (!interfaceThread.isAlive()) interfaceThread.start();
-				ConsoleManager.printDebug(name + " interface successfully connected.");
+				interfaceThread = new Thread(this, "'" + name + "' Interface");
+				interfaceThread.start();
 				return true;
 				
 			} else {
@@ -132,6 +134,7 @@ public class Interface implements Runnable {
 	
 	public void setName(String name) {
 		
+		InterfaceManager.updateInterfaceName(this.name, name);
 		this.name = name;
 		interfaceThread.setName(name);
 		
