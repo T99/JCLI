@@ -1,46 +1,59 @@
 package com.t99sdevelopment.jcli.dummysubpackage;
 
-import com.t99sdevelopment.jcli.dummysubpackage.commands.Arguments;
-import com.t99sdevelopment.jcli.dummysubpackage.commands.Command;
-import com.t99sdevelopment.jcli.dummysubpackage.commands.ExitCommand;
-import com.t99sdevelopment.jcli.dummysubpackage.commands.InterfaceCommand;
-
-import java.util.Map;
-import java.util.HashMap;
+import com.t99sdevelopment.jcli.dummysubpackage.commands.*;
+import com.t99sdevelopment.jcli.dummysubpackage.exceptions.CommandDoesNotExistException;
+import com.t99sdevelopment.jcli.dummysubpackage.util.MultiKeyCommandBiMap;
+import com.t99sdevelopment.jcli.dummysubpackage.util.StandardizedOutputs;
 
 public class CommandManager {
 	
-	private static Map<String, Command> commandMap = new HashMap<>();
+	private static MultiKeyCommandBiMap commandMap = new MultiKeyCommandBiMap();
 	
 	public static void registerAllCommands() {
 		
-		registerCommand(new InterfaceCommand());
+		registerCommand(new ClearCommand());
+		registerCommand(new DebugCommand());
 		registerCommand(new ExitCommand());
+		registerCommand(new HelpCommand());
+		registerCommand(new InterfaceCommand());
 		
 	}
 	
 	private static void registerCommand(Command command) {
 		
-		for (String invocationString: command.getInvocationStrings()) {
+		commandMap.addCommand(command, command.getInvocationStrings());
+		
+		try {
 			
-			commandMap.put(invocationString, command);
-			ConsoleManager.printDebug("The CommandManager stored the '" + command.getClass().getSimpleName() + "' with the '" + invocationString + "' invocation string.");
+			PrintManager.printDebug("The CommandManager stored the '" + command.getClass().getSimpleName() + "' with the '" + commandMap.getPriorityInvocationString(command) + "' invocation string.");
+			
+		} catch (CommandDoesNotExistException e) {
+			
+			PrintManager.printError("This should be impossible -- the command should have been successfully added on the previous line.");
 			
 		}
 		
 	}
 	
+	public static String[] getAllCommands() {
+		
+		return commandMap.getAllPriorityInvocationStrings();
+		
+	}
+	
 	static boolean invoke(String inputCommand, Arguments args) {
 		
-		if (commandMap.containsKey(inputCommand)) {
+		try {
 			
-			commandMap.get(inputCommand).execute(args);
-			ConsoleManager.printDebug("The CommandManager successfully invoked the '" + commandMap.get(inputCommand).getClass().getSimpleName() + "' command with the '" + inputCommand + "' invocation string.");
+			Command command = commandMap.getCommand(inputCommand);
+			
+			command.execute(args);
+			PrintManager.printDebug("The CommandManager successfully invoked the '" + command.getClass().getSimpleName() + "' command with the '" + inputCommand + "' invocation string.");
 			return true;
 			
-		} else {
+		} catch (CommandDoesNotExistException e) {
 			
-			ConsoleManager.printError("A command with the invocation string '" + inputCommand + "' does not exist.");
+			StandardizedOutputs.commandDoesNotExist(inputCommand);
 			return false;
 			
 		}

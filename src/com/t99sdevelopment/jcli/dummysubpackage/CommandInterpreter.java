@@ -9,12 +9,25 @@ public class CommandInterpreter {
 	
 	static boolean interpret(String inputString) {
 		
-		String[] input = groupDelimitedStrings(normalize(inputString));
-		String command = input[0];
-		Arguments args = new Arguments(Arrays.copyOfRange(input, 1, input.length));
+		String[] input = groupDelimitedStrings(normalize(inputString.toLowerCase()));
 		
-		ConsoleManager.printDebug("The CommandInterpreter received the raw input: '" + inputString + "'.");
-		ConsoleManager.printDebug("The CommandInterpreter derived the command as: '" + command + "'.");
+		String command;
+		Arguments args;
+		
+		try {
+			
+			command = input[0];
+			args = new Arguments(Arrays.copyOfRange(input, 1, input.length));
+			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			
+			PrintManager.printDebug("An empty line was sent to the CommandInterpreter.");
+			return false;
+			
+		}
+		
+		PrintManager.printDebug("The CommandInterpreter received the raw input: '" + inputString + "'.");
+		PrintManager.printDebug("The CommandInterpreter derived the command as: '" + command + "'.");
 		// TODO - Add args to debug?
 		
 		return CommandManager.invoke(command, args);
@@ -29,7 +42,7 @@ public class CommandInterpreter {
 		
 		int beginningDelimeter = 0;
 		
-		for (int i = 1; i < input.length(); i++) {
+		for (int i = 0; i < input.length(); i++) {
 			
 			char currentChar = input.substring(i, i + 1).charAt(0);
 			
@@ -57,45 +70,51 @@ public class CommandInterpreter {
 		String delimiter = null;
 		
 		for (int i = 0; i < input.length; i++) {
-			
-			if (input[i].length() >= 2) {
 				
-				if (!delimitedMode) {
+			if (!delimitedMode) {
+				
+				// firstCharacter is equal to the i-th word's first character.
+				String firstCharacter = input[i].substring(0, 1);
+				
+				// if the first character of this given word is a valid delimiter...
+				if (validDelimiters.contains(firstCharacter)) {
 					
-					String firstCharacter = input[i].substring(0, 1);
-					
-					if (validDelimiters.contains(firstCharacter)) {
-						
-						beginningDelimitedString = i;
-						delimitedMode = true;
-						delimiter = firstCharacter;
-						i--;
-						
-					} else {
-						
-						strings.add(input[i]);
-						
-					}
+					beginningDelimitedString = i;
+					delimitedMode = true;
+					delimiter = firstCharacter;
+					i--;
 					
 				} else {
 					
-					if (input[i].substring(input[i].length() - 1, input[i].length()).equals(delimiter)) {
+					strings.add(input[i]);
+					
+				}
+				
+			} else {
+				
+				if (input[i].substring(input[i].length() - 1, input[i].length()).equals(delimiter)) {
+					
+					StringBuilder delimitedString = new StringBuilder();
+					
+					for (int k = beginningDelimitedString; k <= i; k++) {
 						
-						StringBuilder delimitedString = new StringBuilder();
+						delimitedString.append(input[k]);
+						if (k != i) delimitedString.append(" ");
 						
-						for (int k = beginningDelimitedString; k <= i; k++) {
-							
-							delimitedString.append(input[k]);
-							if (k != i) delimitedString.append(" ");
-							
-						}
+					}
+					
+					try {
 						
 						strings.add(delimitedString.toString().substring(1, delimitedString.length() - 1));
 						
-						delimitedMode = false;
-						delimiter = null;
-						
+					} catch (StringIndexOutOfBoundsException e) {
+					
+						PrintManager.printInfo("Caught THIS error.");
+					
 					}
+					
+					delimitedMode = false;
+					delimiter = null;
 					
 				}
 				

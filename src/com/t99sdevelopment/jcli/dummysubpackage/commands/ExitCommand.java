@@ -1,6 +1,6 @@
 package com.t99sdevelopment.jcli.dummysubpackage.commands;
 
-import com.t99sdevelopment.jcli.dummysubpackage.ConsoleManager;
+import com.t99sdevelopment.jcli.dummysubpackage.PrintManager;
 
 public class ExitCommand implements Command {
 	
@@ -9,7 +9,7 @@ public class ExitCommand implements Command {
 	@Override
 	public void execute(Arguments args) {
 		
-		ConsoleManager.printInfo("Exiting... goodbye!");
+		PrintManager.printInfo("Exiting... goodbye!");
 		System.exit(0);
 	
 	}

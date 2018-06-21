@@ -1,12 +1,12 @@
 package com.t99sdevelopment.jcli.dummysubpackage.commands;
 
-import com.t99sdevelopment.jcli.dummysubpackage.ConsoleManager;
+import com.t99sdevelopment.jcli.dummysubpackage.PrintManager;
 import com.t99sdevelopment.jcli.dummysubpackage.InterfaceFactory;
 import com.t99sdevelopment.jcli.dummysubpackage.InterfaceManager;
 import com.t99sdevelopment.jcli.dummysubpackage.exceptions.InterfaceDoesNotExistException;
+import com.t99sdevelopment.jcli.dummysubpackage.util.StandardizedOutputs;
 import com.t99sdevelopment.jcli.dummysubpackage.util.HumanReadableOutput;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,9 +17,16 @@ public class InterfaceCommand implements Command {
 	@Override
 	public void execute(Arguments args) {
 		
-		String secondaryCommand = args.poll();
+		if (args.size() == 0) {
+			
+			StandardizedOutputs.tooFewArgumentsProvided(1, 0);
+			return;
+			
+		}
 		
-		switch (secondaryCommand) {
+		String arg = args.poll();
+		
+		switch (arg) {
 			
 			case "switch":
 				switchInterface(args);
@@ -41,15 +48,32 @@ public class InterfaceCommand implements Command {
 				createInterfaces(args);
 				break;
 			
+			default:
+				StandardizedOutputs.invalidArgument(arg);
+				break;
 		}
 		
 	}
 	
 	private void switchInterface(Arguments args) {
 		
-		if (args.size() != 1) ConsoleManager.printError(args.size() + " args were passed, rather than 1.");
+		if (args.size() != 1) {
+			
+			StandardizedOutputs.incorrectNumberOfArgumentsProvided(1, args.size());
+			return;
+			
+		}
+		
+		
 		
 		try {
+			
+			if (InterfaceManager.getCurrentInterface().equals(InterfaceManager.getInterfaceForName(args.get(0)))) {
+				
+				PrintManager.printInfo("You're already using the '" + args.get(0) + "' Interface.");
+				return;
+				
+			}
 			
 			/*
 			 * The below three lines need to occur in this order to ensure that if the 'InterfaceDoesNotExistException'
@@ -62,7 +86,7 @@ public class InterfaceCommand implements Command {
 			
 		} catch (InterfaceDoesNotExistException e) {
 			
-			ConsoleManager.printError("An Interface with the name '" + args.get(0) + "' does not exist in the InterfaceManager's registry.");
+			PrintManager.printWarn("An Interface with the name '" + args.get(0) + "' does not exist in the InterfaceManager's registry.");
 			
 		}
 		
@@ -70,9 +94,9 @@ public class InterfaceCommand implements Command {
 	
 	private void listInterfaces(Arguments args) {
 		
-		if (args.size() != 0) ConsoleManager.printWarn("The 'interface list' command takes no further arguments. Extra arguments ignored.");
+		if (args.size() != 0) StandardizedOutputs.incorrectNumberOfArgumentsProvided(0, args.size());
 		
-		ConsoleManager.printInfo("Current registered Interfaces: " + HumanReadableOutput.humanReadableArray(InterfaceManager.getAllRegisteredInterfaces()) + ".");
+		PrintManager.printInfo("Current registered Interfaces: " + HumanReadableOutput.humanReadableArray(InterfaceManager.getAllRegisteredInterfaces()) + ".");
 		
 	}
 	
@@ -90,19 +114,26 @@ public class InterfaceCommand implements Command {
 				
 			} catch (InterfaceDoesNotExistException e) {
 				
-				ConsoleManager.printError("An Interface with the name '" + args.get(0) + "' could not be found in the InterfaceManager's registry.");
+				PrintManager.printWarn("An Interface with the name '" + args.get(0) + "' could not be found in the InterfaceManager's registry.");
 				
 			}
 			
 		} else {
 			
-			ConsoleManager.printError(args.size() + " args were passed, rather than 1.");
+			StandardizedOutputs.incorrectNumberOfArgumentsProvided(1, args.size());
 			
 		}
 		
 	}
 	
 	private void deleteInterfaces(Arguments args) {
+		
+		if (args.size() == 0) {
+			
+			StandardizedOutputs.tooFewArgumentsProvided(1, 0);
+			return;
+			
+		}
 		
 		Set<String> unfoundInterfaces = new HashSet<>();
 		
@@ -112,17 +143,12 @@ public class InterfaceCommand implements Command {
 				
 				if (InterfaceManager.getInterfaceForName(i).equals(InterfaceManager.getCurrentInterface())) {
 					
-					ConsoleManager.printWarn("You cannot delete the Interface you are currently using!");
+					PrintManager.printWarn("You cannot delete the Interface you are currently using!");
 					continue;
 					
 				}
 				
-			} catch (InterfaceDoesNotExistException e) {
-				
-				ConsoleManager.printError("This should not be possible...");
-				e.printStackTrace();
-				
-			}
+			} catch (InterfaceDoesNotExistException ignored) {}
 			
 			if (!InterfaceManager.deregisterInterface(i)) {
 				
@@ -134,14 +160,20 @@ public class InterfaceCommand implements Command {
 		
 		if (unfoundInterfaces.size() > 0) {
 			
-			String unfoundInterfacesString = HumanReadableOutput.humanReadableArray(unfoundInterfaces.toArray(new String[0]));
-			ConsoleManager.printError("Could not find the following Interfaces to delete them: " + unfoundInterfacesString + ".");
+			StandardizedOutputs.interfaceDoesNotExist(unfoundInterfaces.toArray(new String[0]));
 			
 		}
 		
 	}
 	
 	private void createInterfaces(Arguments args) {
+		
+		if (args.size() == 0) {
+			
+			StandardizedOutputs.tooFewArgumentsProvided(1, 0);
+			return;
+			
+		}
 		
 		Set<String> preexistingInterfaces = new HashSet<>();
 		
@@ -152,13 +184,12 @@ public class InterfaceCommand implements Command {
 				if (InterfaceManager.getInterfaceForName(i) != null) {
 					
 					preexistingInterfaces.add(i);
-					continue;
 					
 				}
 				
 			} catch (InterfaceDoesNotExistException e) {
 				
-				InterfaceFactory.getInterface(i);
+				InterfaceFactory.createInterface(i);
 				
 			}
 			
@@ -167,7 +198,7 @@ public class InterfaceCommand implements Command {
 		if (preexistingInterfaces.size() > 0) {
 			
 			String preexistingInterfacesString = HumanReadableOutput.humanReadableArray(preexistingInterfaces.toArray(new String[0]));
-			ConsoleManager.printError("The following Interfaces already exist: " + preexistingInterfacesString + ".");
+			PrintManager.printWarn("The following Interfaces already exist: " + preexistingInterfacesString + ".");
 			
 		}
 		

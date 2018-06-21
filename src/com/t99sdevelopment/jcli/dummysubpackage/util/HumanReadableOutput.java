@@ -5,15 +5,16 @@ public class HumanReadableOutput {
 	public static String humanReadableArray(Object[] objects) {
 	
 		StringBuilder hrArray = new StringBuilder();
+		String delimiter = ", ";
 		
 		for (Object object: objects) {
 			
 			hrArray.append(object.toString());
-			hrArray.append(", ");
+			hrArray.append(delimiter);
 			
 		}
 		
-		return hrArray.toString().substring(0, hrArray.length() - 2);
+		return hrArray.toString().substring(0, hrArray.length() - delimiter.length());
 	
 	}
 	

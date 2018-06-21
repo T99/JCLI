@@ -40,6 +40,8 @@ public class Interface implements Runnable {
 		// We have to instantiate the Thread here, otherwise we can get NullPointerExceptions down the line.
 		interfaceThread = new Thread(this, "'" + name + "' Interface");
 		
+		if (InterfaceManager.getCurrentInterface() == null) this.connect();
+		
 	}
 	
 	public boolean connect() {
@@ -56,7 +58,7 @@ public class Interface implements Runnable {
 				
 			} else {
 				
-				ConsoleManager.printDebug(name + " interface failed to connect.");
+				PrintManager.printDebug(name + " interface failed to connect.");
 				return false;
 				
 			}
@@ -71,12 +73,12 @@ public class Interface implements Runnable {
 			
 			isConnected = false;
 			InterfaceManager.removeCurrentInterface(this);
-			ConsoleManager.printDebug(name + " interface successfully disconnected.");
+			PrintManager.printDebug(name + " interface successfully disconnected.");
 			return true;
 			
 		} else {
 			
-			ConsoleManager.printDebug(name + " interface failed to disconnect.");
+			PrintManager.printDebug(name + " interface failed to disconnect.");
 			return false;
 			
 		}
@@ -145,8 +147,10 @@ public class Interface implements Runnable {
 	
 		while (isConnected) {
 			
-			ConsoleManager.printPrompt(this);
-			CommandInterpreter.interpret(input.nextLine());
+			PrintManager.printPrompt(this);
+			String rawInput = input.nextLine();
+			PrintManager.confirmNewLine();
+			CommandInterpreter.interpret(rawInput);
 			
 		}
 	

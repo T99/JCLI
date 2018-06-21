@@ -1,10 +1,12 @@
 package com.t99sdevelopment.jcli.dummysubpackage;
 
+import com.t99sdevelopment.jcli.dummysubpackage.util.EnvironmentHelper;
 import com.t99sdevelopment.jcli.dummysubpackage.util.TextStylizer;
 
-public class ConsoleManager {
+public class PrintManager {
 	
 	private static boolean debug = false; // TODO - Make the debug bool Interface specific.
+	private static boolean isOnNewLine = true;
 	
 	/**
 	 * Used to print the standard prompt to the console.
@@ -13,7 +15,7 @@ public class ConsoleManager {
 	 */
 	public static void printPrompt(Interface i) {
 		
-		System.out.print(LineType.PROMPT.useLineType(i.getName()));
+		print(i.getName(), LineType.PROMPT);
 		
 	}
 	
@@ -24,7 +26,7 @@ public class ConsoleManager {
 	 */
 	public static void printNormal(String message) {
 		
-		System.out.print(LineType.NORMAL.useLineType(message));
+		print(message, LineType.NORMAL);
 		
 	}
 	
@@ -35,7 +37,7 @@ public class ConsoleManager {
 	 */
 	public static void printInfo(String message) {
 		
-		System.out.print(LineType.INFO.useLineType(message));
+		print(message, LineType.INFO);
 		
 	}
 	
@@ -47,7 +49,7 @@ public class ConsoleManager {
 	 */
 	public static void printDebug(String message) {
 		
-		if (debug) System.out.print(LineType.INFO.useLineType(message));
+		if (debug) print(message, LineType.DEBUG);
 		
 	}
 	
@@ -59,7 +61,7 @@ public class ConsoleManager {
 	 */
 	public static void printWarn(String message) {
 		
-		System.out.print(LineType.WARN.useLineType(message));
+		print(message, LineType.WARN);
 		
 	}
 	
@@ -71,19 +73,75 @@ public class ConsoleManager {
 	 */
 	public static void printError(String message) {
 		
-		System.out.print(LineType.ERROR.useLineType(message));
+		print(message, LineType.ERROR);
 		
 	}
 	
-	public static boolean toggleDebug() {
+	private static void print(String message, LineType lineType) {
 		
-		return debug = !debug;
+		ensureNewLine();
+		
+		if (EnvironmentHelper.getEnvironment() == EnvironmentHelper.Environment.LINUX) {
+			
+			System.out.print(lineType.use(message));
+			
+		} else {
+			
+			System.out.print(lineType.useWithoutStylization(message));
+			
+		}
+		
+		isOnNewLine = lineType.doesEndLine();
+		
+	}
+	
+	public static void confirmNewLine() {
+		
+		isOnNewLine = true;
+		
+	}
+	
+	private static void ensureNewLine() {
+		
+		if (!isOnNewLine) {
+			
+			System.out.print(System.lineSeparator());
+			isOnNewLine = true;
+			
+		}
+		
+	}
+	
+	public static void toggleDebug() {
+		
+		setDebug(!debug);
 		
 	}
 	
 	public static void setDebug(boolean debug) {
 		
-		ConsoleManager.debug = debug;
+		if (PrintManager.debug == debug) {
+			
+			PrintManager.printInfo("Debug output is already " + ((debug) ? "on" : "off") + ".");
+			
+		} else  {
+			
+			if (debug) {
+				
+				PrintManager.debug = debug;
+				PrintManager.printDebug("Debug output is now on.");
+				
+			} else {
+				
+				PrintManager.printDebug("Debug output is now off.");
+				PrintManager.debug = debug;
+				
+			}
+			
+			
+		
+		}
+		
 		
 	}
 	
@@ -128,14 +186,26 @@ public class ConsoleManager {
 			
 			this.attribute = attribute;
 			this.color = color;
-			this.preText = formatPreText(preText);
+			this.preText = preText;
 			this.postText = posttext;
 			
 		}
 		
-		public String useLineType(String message) {
+		private String use(String message) {
 			
-			return preText + TextStylizer.getStylizedText(message, attribute, color) + postText;
+			return formatPreText(preText) + TextStylizer.getStylizedText(message, attribute, color) + postText;
+			
+		}
+		
+		private String useWithoutStylization(String message) {
+			
+			return preText + message + postText;
+			
+		}
+		
+		private boolean doesEndLine() {
+			
+			return postText.equals(System.lineSeparator());
 			
 		}
 		

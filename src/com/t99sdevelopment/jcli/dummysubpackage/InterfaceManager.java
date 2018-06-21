@@ -14,14 +14,14 @@ public class InterfaceManager {
 		
 		if (interfaceMap.containsKey(name)) {
 			
-			ConsoleManager.printDebug("The InterfaceManager failed to register a new Interface with the name: '" + name + "' due to that name being a duplicate.");
+			PrintManager.printDebug("The InterfaceManager failed to register a new Interface with the name: '" + name + "' due to that name being a duplicate.");
 			return false;
 			
 		}
 		else {
 			
 			interfaceMap.put(name, i);
-			ConsoleManager.printDebug("The InterfaceManager successfully registered a new Interface with the name: '" + name + "'.");
+			PrintManager.printDebug("The InterfaceManager successfully registered a new Interface with the name: '" + name + "'.");
 			return true;
 			
 		}
@@ -33,12 +33,12 @@ public class InterfaceManager {
 		if (interfaceMap.containsKey(name)) {
 			
 			interfaceMap.remove(name);
-			ConsoleManager.printDebug("InterfaceManager successfully removed the '" + name + "' Interface from the registry.");
+			PrintManager.printDebug("InterfaceManager successfully removed the '" + name + "' Interface from the registry.");
 			return true;
 			
 		} else {
 			
-			ConsoleManager.printDebug("InterfaceManager failed to removed the '" + name + "' Interface from the registry because it did not exist.");
+			PrintManager.printDebug("InterfaceManager failed to removed the '" + name + "' Interface from the registry because it did not exist.");
 			return false;
 			
 		}
@@ -51,12 +51,12 @@ public class InterfaceManager {
 			
 			interfaceMap.put(newName, interfaceMap.get(oldName));
 			interfaceMap.remove(oldName);
-			ConsoleManager.printDebug("The InterfaceManager renamed the '" + oldName + "' Interface to '" + newName + "'.");
+			PrintManager.printDebug("The InterfaceManager renamed the '" + oldName + "' Interface to '" + newName + "'.");
 			return true;
 			
 		} else {
 			
-			ConsoleManager.printDebug("The InterfaceManager failed to rename an Interface because it could not find an Interface by the name: '" + oldName + "'.");
+			PrintManager.printDebug("The InterfaceManager failed to rename an Interface because it could not find an Interface by the name: '" + oldName + "'.");
 			return false;
 			
 		}
@@ -98,7 +98,7 @@ public class InterfaceManager {
 		
 		if (currentInterface != null && currentInterface.equals(i)) { // Just leave this line. This is correct.
 			
-			ConsoleManager.printDebug("The InterfaceManager failed to update the current Interface because the given '" + i.getName() + "' Interface was already the current Interface.");
+			PrintManager.printDebug("The InterfaceManager failed to update the current Interface because the given '" + i.getName() + "' Interface was already the current Interface.");
 			return false;
 			
 		}
@@ -106,15 +106,15 @@ public class InterfaceManager {
 		if (currentInterface == null) {
 			
 			currentInterface = i;
-			ConsoleManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
+			PrintManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
 			return true;
 			
 		} else if (currentInterface.doesAllowSuggestedYield()) {
 			
 			currentInterface.suggestYield(); // TODO - I'm not even sure I need this functionality anymore :\
-			ConsoleManager.printDebug("The InterfaceManager suggested that the '" + currentInterface.getName() + "' Interface yield to the '" + i.getName() + "' Interface.");
+			PrintManager.printDebug("The InterfaceManager suggested that the '" + currentInterface.getName() + "' Interface yield to the '" + i.getName() + "' Interface.");
 			currentInterface = i;
-			ConsoleManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
+			PrintManager.printDebug("The InterfaceManager set the current Interface to '" + i.getName() + "'.");
 			return true;
 			
 		} else return false;
@@ -126,12 +126,12 @@ public class InterfaceManager {
 		if (currentInterface.equals(i)) {
 			
 			currentInterface = null;
-			ConsoleManager.printDebug("The InterfaceManager removed the '" + i.getName() + "' Interface as the current Interface.");
+			PrintManager.printDebug("The InterfaceManager removed the '" + i.getName() + "' Interface as the current Interface.");
 			return true;
 			
 		} else {
 			
-			ConsoleManager.printDebug("The InterfaceManager failed to remove the '" + i.getName() + "' Interface as the current Interface because it was not the current Interface.");
+			PrintManager.printDebug("The InterfaceManager failed to remove the '" + i.getName() + "' Interface as the current Interface because it was not the current Interface.");
 			return false;
 			
 		}
