@@ -1,21 +1,65 @@
 /*
  * Created by Trevor Sears <trevorsears.main@gmail.com>.
- * 5:34 PM -- September 03rd, 2018.
+ * 10:59 PM -- September 04th, 2018.
  * Classpath: io.trevorsears.code.java.jcli.output.OutputNode
  */
 
 package io.trevorsears.code.java.jcli.output;
 
-public interface OutputNode {
+public class OutputNode {
 	
-	void enable();
+	private String name;
+	private boolean enabled;
+	private OutputContainer parent;
 	
-	void disable();
+	protected OutputNode(OutputContainer parent, String name, boolean enabled) {
+		
+		this.name = name;
+		this.parent = parent;
+		this.enabled = enabled;
+		
+	}
 	
-	boolean setName(String name);
+	public void enable() {
+		
+		enabled = true;
 	
-	String getName();
+	}
 	
-	OutputContainer getParent();
+	public void disable() {
+		
+		enabled = false;
+	
+	}
+	
+	public boolean isEnabled() {
+		
+		return enabled;
+		
+	}
+	
+	public boolean setName(String newName) {
+		
+		if (parent.renameOutputNode(this.name, newName)) {
+			
+			name = newName;
+			return true;
+			
+		} else return false;
+		
+	}
+	
+	public String getName() {
+		
+		return name;
+	
+	}
+	
+	public OutputContainer getParent() {
+		
+		if (parent != null) return parent;
+		else return null;
+		
+	}
 	
 }

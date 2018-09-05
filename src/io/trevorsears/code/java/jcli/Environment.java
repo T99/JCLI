@@ -6,6 +6,8 @@
 
 package io.trevorsears.code.java.jcli;
 
+import io.trevorsears.code.java.jcli.output.formatting.LinuxOutputFormatter;
+
 public class Environment {
 	
 	private static Environment instance;
@@ -37,10 +39,24 @@ public class Environment {
 	
 	public enum OperatingSystem {
 		
-		Windows,
-		Linux,
-		Macintosh,
-		Unknown;
+		Windows		(null),
+		Linux		(new LinuxOutputFormatter()),
+		Macintosh	(),
+		Unknown		(null);
+		
+		TextFormatter environmentSpecificTextFormatter;
+		
+		OperatingSystem(TextFormatter environmentSpecificTextFormatter) {
+			
+			this.environmentSpecificTextFormatter = environmentSpecificTextFormatter;
+			
+		}
+		
+		public TextFormatter getEnvironmentSpecificTextFormatter() {
+			
+			return environmentSpecificTextFormatter;
+			
+		}
 		
 	}
 	

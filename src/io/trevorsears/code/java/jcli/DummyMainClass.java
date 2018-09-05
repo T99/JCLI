@@ -8,17 +8,17 @@ package io.trevorsears.code.java.jcli;
 
 import io.trevorsears.code.java.jcli.commands.CommandInput;
 import io.trevorsears.code.java.jcli.commands.Flag;
-import io.trevorsears.code.java.jcli.output.OutputRegister;
+
+import java.time.LocalDate;
 
 public class DummyMainClass {
 	
 	public static void main(String... args) {
 		
-		JCLI.initializeInstance(true);
-		JCLI jcli = JCLI.getInstance();
-		
-		OutputRegister outputRegister = OutputRegister.getInstance();
-		outputRegister.addOutput("default", true);
+//		JCLI.initializeInstance(true);
+//		JCLI jcli = JCLI.getInstance();
+	
+	
 		
 	}
 	
