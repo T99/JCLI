@@ -11,20 +11,191 @@ public class LinuxOutputFormatter implements OutputFormatter {
 	@Override
 	public String getFormattedText(String string, Color foregroundColor, Color backgroundColor, Decoration decoration) {
 		
-		return null;
+		String output = string;
+		
+		if (foregroundColor != null) output = foregroundColorText(output, foregroundColor);
+		if (backgroundColor != null) output = backgroundColorText(output, backgroundColor) ;
+		if (decoration != null) /*TODO*/ ;
+		
+		return output;
 		
 	}
 	
-	private String colorText(String string, Color foregroundColor) {
+	public static String foregroundColorText(String string, Color foregroundColor) {
 		
-		switch ()
+		switch (foregroundColor) {
+			
+			case BLACK:
+				return ForegroundColorEscapeCodes.BLACK.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case WHITE:
+				return ForegroundColorEscapeCodes.WHITE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case RED:
+				return ForegroundColorEscapeCodes.RED.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case ORANGE:
+				return ForegroundColorEscapeCodes.ORANGE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case YELLOW:
+				return ForegroundColorEscapeCodes.YELLOW.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case GREEN:
+				return ForegroundColorEscapeCodes.GREEN.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case BLUE:
+				return ForegroundColorEscapeCodes.BLUE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			case VIOLET:
+				return ForegroundColorEscapeCodes.VIOLET.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+				
+			default:
+				return string;
+				
+		}
 		
 	}
 	
-	private String colorText(String string, Color foregroundColor, Color backgroundColor) {
+	public static String backgroundColorText(String string, Color backgroundColor) {
+		
+		switch (backgroundColor) {
+			
+			case BLACK:
+				return BackgroundColorEscapeCodes.BLACK.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case WHITE:
+				return BackgroundColorEscapeCodes.WHITE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case RED:
+				return BackgroundColorEscapeCodes.RED.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case ORANGE:
+				return BackgroundColorEscapeCodes.ORANGE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case YELLOW:
+				return BackgroundColorEscapeCodes.YELLOW.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case GREEN:
+				return BackgroundColorEscapeCodes.GREEN.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case BLUE:
+				return BackgroundColorEscapeCodes.BLUE.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			case VIOLET:
+				return BackgroundColorEscapeCodes.VIOLET.getEscapeCode() + string + ResetEscapeCodes.ALL.getEscapeCode();
+			
+			default:
+				return string;
+			
+		}
+		
+	}
 	
+	private enum ForegroundColorEscapeCodes {
+		
+		BLACK	("\033[38;5;0m"),
+		WHITE	("\033[38;5;15m"),
+		RED		("\033[38;5;9m"),
+		ORANGE	("\033[38;5;209m"),
+		YELLOW	("\033[38;5;11m"),
+		GREEN	("\033[38;5;75m"),
+		BLUE	("\033[38;5;4m"),
+		VIOLET	("\033[38;5;207m");
+		
+		private final String escapeCode;
+		
+		ForegroundColorEscapeCodes(String escapeCode) {
+			
+			this.escapeCode = escapeCode;
+			
+		}
+		
+		private String getEscapeCode() {
+			
+			return escapeCode;
+			
+		}
+		
+		
+	}
 	
+	private enum BackgroundColorEscapeCodes {
+		
+		BLACK	("\033[48;5;0m"),
+		WHITE	("\033[48;5;15m"),
+		RED		("\033[48;5;9m"),
+		ORANGE	("\033[48;5;209m"),
+		YELLOW	("\033[48;5;11m"),
+		GREEN	("\033[48;5;10m"),
+		BLUE	("\033[48;5;4m"),
+		VIOLET	("\033[48;5;207m");
+		
+		private final String escapeCode;
+		
+		BackgroundColorEscapeCodes(String escapeCode) {
+			
+			this.escapeCode = escapeCode;
+			
+		}
+		
+		private String getEscapeCode() {
+			
+			return escapeCode;
+			
+		}
+		
+		
+	}
 	
+	private enum DecorationEscapeCodes {
+		
+		BOLD		("\033[1m"),
+		DIM			("\033[2m"),
+		UNDERLINED	("\033[4m"),
+		BLINK		("\033[5m"),
+		REVERSE		("\033[7m"),
+		HIDDEN		("\033[8m");
+		
+		private final String escapeCode;
+		
+		DecorationEscapeCodes(String escapeCode) {
+			
+			this.escapeCode = escapeCode;
+			
+		}
+		
+		private String getEscapeCode() {
+			
+			return escapeCode;
+			
+		}
+		
+	}
+	
+	private enum ResetEscapeCodes {
+		
+		ALL			("\033[0m"),
+		BOLD		("\033[21m"),
+		DIM			("\033[22m"),
+		UNDERLINED	("\033[24m"),
+		BLINK		("\033[25m"),
+		REVERSE		("\033[27m"),
+		HIDDEN		("\033[28m");
+		
+		private final String escapeCode;
+		
+		ResetEscapeCodes(String escapeCode) {
+			
+			this.escapeCode = escapeCode;
+			
+		}
+		
+		private String getEscapeCode() {
+			
+			return escapeCode;
+			
+		}
+		
 	}
 	
 }

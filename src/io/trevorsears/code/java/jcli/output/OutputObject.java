@@ -6,41 +6,51 @@
 
 package io.trevorsears.code.java.jcli.output;
 
+import io.trevorsears.code.java.jcli.Environment;
 import io.trevorsears.code.java.jcli.output.formatting.Color;
 import io.trevorsears.code.java.jcli.output.formatting.Decoration;
+import io.trevorsears.code.java.jcli.output.formatting.OutputFormatter;
 
 import java.time.LocalDateTime;
 
 public class OutputObject {
 	
-	String string;
+	String content;
 	Color foregroundColor;
 	Color backgroundColor;
 	Decoration decoration;
 	LocalDateTime timestamp;
 	boolean hasDefinedStyle;
 	
-	protected OutputObject(String string) {
+	// TODO - Make these constructors protected again later...
+	
+	public OutputObject(String content) {
 		
-		this(string, null, null);
+		this(content, null, null, null);
 		
 	}
 	
-	protected OutputObject(String string, Color foregroundColor) {
+	public OutputObject(String content, Color foregroundColor) {
 		
-		this(string, foregroundColor, null);
-		
-	}
-	
-	protected OutputObject(String string, Color foregroundColor, Decoration decoration) {
-		
-		this(string, foregroundColor, null, decoration);
+		this(content, foregroundColor, null, null);
 		
 	}
 	
-	protected OutputObject(String string, Color foregroundColor, Color backgroundColor, Decoration decoration) {
+	public OutputObject(String content, Color foregroundColor, Color backgroundColor) {
 		
-		this.string = string;
+		this(content, foregroundColor, backgroundColor, null);
+		
+	}
+	
+	public OutputObject(String content, Color foregroundColor, Decoration decoration) {
+		
+		this(content, foregroundColor, null, decoration);
+		
+	}
+	
+	public OutputObject(String content, Color foregroundColor, Color backgroundColor, Decoration decoration) {
+		
+		this.content = content;
 		this.foregroundColor = foregroundColor;
 		this.backgroundColor = backgroundColor;
 		this.decoration = decoration;
@@ -49,6 +59,36 @@ public class OutputObject {
 		this.hasDefinedStyle =	foregroundColor != null ||
 								backgroundColor != null ||
 								decoration != null;
+		
+	}
+	
+	public String getContent() {
+		
+		return content;
+		
+	}
+	
+	public Color getForegroundColor() {
+		
+		return foregroundColor;
+		
+	}
+	
+	public Color getBackgroundColor() {
+		
+		return backgroundColor;
+		
+	}
+	
+	public Decoration getDecoration() {
+		
+		return decoration;
+		
+	}
+	
+	public LocalDateTime getTimestamp() {
+		
+		return timestamp;
 		
 	}
 	
@@ -61,7 +101,8 @@ public class OutputObject {
 	@Override
 	public String toString() {
 		
-		return super.toString();
+		OutputFormatter outputFormatter = Environment.getEnvironment().getEnvironmentSpecificOutputFormatter();
+		return outputFormatter.getFormattedText(content, foregroundColor, backgroundColor, decoration);
 		
 	}
 	

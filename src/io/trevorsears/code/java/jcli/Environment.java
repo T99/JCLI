@@ -6,57 +6,52 @@
 
 package io.trevorsears.code.java.jcli;
 
+import io.trevorsears.code.java.jcli.output.formatting.IntelliJOutputFormatter;
 import io.trevorsears.code.java.jcli.output.formatting.LinuxOutputFormatter;
+import io.trevorsears.code.java.jcli.output.formatting.OutputFormatter;
 
-public class Environment {
+public enum Environment {
 	
-	private static Environment instance;
-	private final OperatingSystem operatingSystem;
+	WINDOWS			(null),
+	LINUX			(new LinuxOutputFormatter()),
+	LINUX_INTELLIJ	(new IntelliJOutputFormatter()),
+	MACINTOSH		(null),
+	UNKNOWN			(null);
 	
-	private Environment() {
+	private static Environment environment;
+	
+	private final OutputFormatter environmentSpecificOutputFormatter;
+	
+	Environment(OutputFormatter environmentSpecificOutputFormatter) {
 		
-		String osString = System.getProperty("os.name");
-		
-		if (osString.contains("Windows")) operatingSystem = OperatingSystem.Windows;
-		else if (osString.contains("Linux")) operatingSystem = OperatingSystem.Linux;
-		else if (osString.contains("Mac")) operatingSystem = OperatingSystem.Macintosh;
-		else operatingSystem = OperatingSystem.Unknown;
+		this.environmentSpecificOutputFormatter = environmentSpecificOutputFormatter;
 		
 	}
 	
-	public static Environment getInstance() {
+	public static Environment getEnvironment() {
 		
-		if (instance == null) instance = new Environment();
-		return instance;
-		
-	}
-	
-	public OperatingSystem getOperatingSystem() {
-		
-		return operatingSystem;
-		
-	}
-	
-	public enum OperatingSystem {
-		
-		Windows		(null),
-		Linux		(new LinuxOutputFormatter()),
-		Macintosh	(),
-		Unknown		(null);
-		
-		TextFormatter environmentSpecificTextFormatter;
-		
-		OperatingSystem(TextFormatter environmentSpecificTextFormatter) {
+		if (environment == null) {
 			
-			this.environmentSpecificTextFormatter = environmentSpecificTextFormatter;
+			String osString = System.getProperty("os.name");
+			
+			if (osString.contains("Windows")) environment = WINDOWS;
+			else if (osString.contains("Linux")) {
+				
+				if (System.getProperty("java.class.path").contains("idea_rt.jar")) environment = LINUX_INTELLIJ;
+				else environment = LINUX;
+				
+			} else if (osString.contains("Mac")) environment = MACINTOSH;
+			else environment = UNKNOWN;
 			
 		}
 		
-		public TextFormatter getEnvironmentSpecificTextFormatter() {
-			
-			return environmentSpecificTextFormatter;
-			
-		}
+		return environment;
+		
+	}
+	
+	public OutputFormatter getEnvironmentSpecificOutputFormatter() {
+		
+		return environmentSpecificOutputFormatter;
 		
 	}
 	

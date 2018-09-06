@@ -6,8 +6,11 @@
 
 package io.trevorsears.code.java.jcli.output.formatting;
 
-public class Decoration {
+public enum Decoration {
 	
-	
+	BOLD,
+	ITALICS,
+	UNDERLINED,
+	BLINKING;
 	
 }
