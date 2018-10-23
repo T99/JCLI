@@ -7,7 +7,8 @@
 package io.trevorsears.code.java.jcli;
 
 import io.trevorsears.code.java.jcli.commands.Command;
-import io.trevorsears.code.java.jcli.exceptions.JCLINotInitializedException;
+import io.trevorsears.code.java.jcli.exceptions.runtime.JCLINotInitializedException;
+import io.trevorsears.code.java.jcli.output.OutputContainer;
 import io.trevorsears.code.java.trie.Trie;
 
 import java.util.Scanner;
@@ -16,12 +17,14 @@ public class JCLI implements Runnable {
 	
 	private static JCLI instance;
 	private Trie<Command> commandRegistry;
+	private OutputContainer outputRegistry;
 	private Thread thread;
 	private Scanner stdin = new Scanner(System.in);
 	
 	private JCLI(boolean autoStart) {
 	
 		commandRegistry = new Trie<>();
+		outputRegistry = OutputContainer.getRootContainer(this);
 		thread = new Thread(this);
 		
 		if (autoStart) thread.start();
@@ -39,6 +42,16 @@ public class JCLI implements Runnable {
 		if (instance == null) {
 			
 			instance = new JCLI(autoStart);
+			
+			instance.outputRegistry.addOutputContainer("Standard Log Levels");
+			OutputContainer standardLogLevels = instance.outputRegistry.getOutputContainer("Standard Log Levels");
+			standardLogLevels.addOutput("Stdout", true);
+			standardLogLevels.getOutput("Stdout").setIsPrefixed(false);
+			standardLogLevels.addOutput("INFO", false);
+			standardLogLevels.addOutput("WARN", false);
+			standardLogLevels.addOutput("ERR", false);
+			standardLogLevels.addOutput("DEBUG", false);
+			
 			return true;
 			
 		} else return false;
@@ -81,9 +94,9 @@ public class JCLI implements Runnable {
 		
 	}
 	
-	public void registerCommand(String commandName, Command command) {
+	public void registerCommand(Command command) {
 		
-		commandRegistry.add(commandName, command);
+		commandRegistry.add(command.getName(), command);
 		
 	}
 	
@@ -93,14 +106,20 @@ public class JCLI implements Runnable {
 		
 	}
 	
+	public OutputContainer getOutputRegistry() {
+		
+		return outputRegistry;
+		
+	}
+	
 	@Override
 	public void run() {
 		
 		System.out.println("JCLI is starting...");
 		
 		while (!this.thread.isInterrupted()) {
-			
-			InputInterpreter.interpret(stdin.nextLine());
+		
+		
 			
 		}
 		

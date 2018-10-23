@@ -18,6 +18,7 @@ public class Output extends OutputNode {
 	Color standardForegroundOutputColor;
 	Color standardBackgroundOutputColor;
 	Decoration standardOutputDecoration;
+	boolean isPrefixed;
 	
 	LinkedList<OutputObject> outputHistory = new LinkedList<>();
 	
@@ -37,13 +38,25 @@ public class Output extends OutputNode {
 		
 	}
 	
+	private String getPrefix() {
+		
+		return (isPrefixed) ? "[" + this.getName() + "] " : "";
+		
+	}
+	
+	public void setIsPrefixed(boolean isPrefixed) {
+		
+		this.isPrefixed = isPrefixed;
+		
+	}
+	
 	public void write(OutputObject outputObject) {
 		
 		OutputFormatter outputFormatter = Environment.getEnvironment().getEnvironmentSpecificOutputFormatter();
 		
 		if (outputObject.hasDefinedStyle()) {
 			
-			System.out.println(outputFormatter.getFormattedText(outputObject.getContent(),
+			System.out.println(outputFormatter.getFormattedText(this.getPrefix() + outputObject.getContent(),
 				outputObject.getForegroundColor(),
 				outputObject.getBackgroundColor(),
 				outputObject.getDecoration()));

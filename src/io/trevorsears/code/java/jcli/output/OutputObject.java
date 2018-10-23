@@ -36,6 +36,12 @@ public class OutputObject {
 		
 	}
 	
+	public OutputObject(String content, Decoration decoration) {
+		
+		this(content, null, null, decoration);
+		
+	}
+	
 	public OutputObject(String content, Color foregroundColor, Color backgroundColor) {
 		
 		this(content, foregroundColor, backgroundColor, null);

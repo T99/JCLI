@@ -15,7 +15,7 @@ public class IntelliJOutputFormatter implements OutputFormatter {
 		
 		if (foregroundColor != null) output = foregroundColorText(output, foregroundColor);
 		if (backgroundColor != null) output = backgroundColorText(output, backgroundColor) ;
-		if (decoration != null) /*TODO*/ ;
+		if (decoration != null) output = decorateText(output, decoration);
 		
 		return output;
 		
@@ -91,12 +91,41 @@ public class IntelliJOutputFormatter implements OutputFormatter {
 		
 	}
 	
+	public static String decorateText(String string, Decoration decoration) {
+		
+		switch (decoration) {
+			
+			case BOLD:
+				return DecorationEscapeCodes.BOLD.getEscapeCode() + string + ResetEscapeCodes.BOLD.getEscapeCode();
+			
+			case DIM:
+				return DecorationEscapeCodes.DIM.getEscapeCode() + string + ResetEscapeCodes.DIM.getEscapeCode();
+			
+			case UNDERLINED:
+				return DecorationEscapeCodes.UNDERLINED.getEscapeCode() + string + ResetEscapeCodes.UNDERLINED.getEscapeCode();
+			
+			case BLINK:
+				return DecorationEscapeCodes.BLINK.getEscapeCode() + string + ResetEscapeCodes.BLINK.getEscapeCode();
+			
+			case REVERSE:
+				return DecorationEscapeCodes.REVERSE.getEscapeCode() + string + ResetEscapeCodes.REVERSE.getEscapeCode();
+			
+			case HIDDEN:
+				return DecorationEscapeCodes.HIDDEN.getEscapeCode() + string + ResetEscapeCodes.HIDDEN.getEscapeCode();
+			
+			default:
+				return string;
+			
+		}
+		
+	}
+	
 	private enum ForegroundColorEscapeCodes {
 		
 		BLACK	("\033[30m"),
 		WHITE	("\033[97m"),
-		RED		("\033[91m"),
-		ORANGE	("\033[31m"),
+		RED		("\033[31m"),
+		ORANGE	("\033[91m"),
 		YELLOW	("\033[33m"),
 		GREEN	("\033[32m"),
 		BLUE	("\033[34m"),
@@ -123,8 +152,8 @@ public class IntelliJOutputFormatter implements OutputFormatter {
 		
 		BLACK	("\033[40m"),
 		WHITE	("\033[107m"),
-		RED		("\033[101m"),
-		ORANGE	("\033[41m"),
+		RED		("\033[41m"),
+		ORANGE	("\033[101m"),
 		YELLOW	("\033[43m"),
 		GREEN	("\033[42m"),
 		BLUE	("\033[44m"),

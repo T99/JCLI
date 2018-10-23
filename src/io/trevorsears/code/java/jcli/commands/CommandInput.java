@@ -6,23 +6,31 @@
 
 package io.trevorsears.code.java.jcli.commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CommandInput {
 	
-	private final String[] generalInput;
+	private ArrayList<String> generalInput;
 	private HashMap<Flag, String> flagMap;
 	
-	public CommandInput(String[] generalInput) {
+	public CommandInput(String... generalInput) {
 		
-		this.generalInput = generalInput;
+		this.generalInput = new ArrayList<>();
+		for (String string: generalInput) this.generalInput.add(string);
 		this.flagMap = new HashMap<>();
+		
+	}
+	
+	public void addGeneralInput(String string) {
+		
+		generalInput.add(string);
 		
 	}
 	
 	public String[] getGeneralInput() {
 		
-		return generalInput;
+		return generalInput.toArray(new String[0]);
 		
 	}
 	
@@ -45,11 +53,11 @@ public class CommandInput {
 		
 		stringBuilder.append("General input:\t[");
 		
-		for (int index = 0; index < generalInput.length; index++) {
+		for (int index = 0; index < generalInput.size(); index++) {
 			
-			stringBuilder.append(generalInput[index]);
+			stringBuilder.append(generalInput.get(index));
 			
-			if (index < generalInput.length - 1) stringBuilder.append(", ");
+			if (index < generalInput.size() - 1) stringBuilder.append(", ");
 			
 		}
 		

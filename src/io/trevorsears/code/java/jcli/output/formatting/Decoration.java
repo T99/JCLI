@@ -9,8 +9,10 @@ package io.trevorsears.code.java.jcli.output.formatting;
 public enum Decoration {
 	
 	BOLD,
-	ITALICS,
+	DIM,
 	UNDERLINED,
-	BLINKING;
+	BLINK,
+	REVERSE,
+	HIDDEN;
 	
 }

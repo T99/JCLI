@@ -1,5 +1,5 @@
 ## JCLI
-A CLI for you to use in your Java projects.
+A CLI for use in your Java projects.
  - Test interactively, or...
  - Quickly provide your command line tool with a more refined interface, or...
  - Log your application's outputs more elegantly and effectively.

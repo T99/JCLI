@@ -8,6 +8,8 @@ package io.trevorsears.code.java.jcli.commands;
 
 public interface Command extends CommandMethod, Helpable {
 	
+	String getName();
+	
 	Flag[] getRelevantFlags();
 	
 }

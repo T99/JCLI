@@ -15,7 +15,7 @@ public class LinuxOutputFormatter implements OutputFormatter {
 		
 		if (foregroundColor != null) output = foregroundColorText(output, foregroundColor);
 		if (backgroundColor != null) output = backgroundColorText(output, backgroundColor) ;
-		if (decoration != null) /*TODO*/ ;
+		if (decoration != null) output = decorateText(output, decoration);
 		
 		return output;
 		
@@ -91,6 +91,35 @@ public class LinuxOutputFormatter implements OutputFormatter {
 		
 	}
 	
+	public static String decorateText(String string, Decoration decoration) {
+		
+		switch (decoration) {
+			
+			case BOLD:
+				return DecorationEscapeCodes.BOLD.getEscapeCode() + string + ResetEscapeCodes.BOLD.getEscapeCode();
+				
+			case DIM:
+				return DecorationEscapeCodes.DIM.getEscapeCode() + string + ResetEscapeCodes.DIM.getEscapeCode();
+				
+			case UNDERLINED:
+				return DecorationEscapeCodes.UNDERLINED.getEscapeCode() + string + ResetEscapeCodes.UNDERLINED.getEscapeCode();
+				
+			case BLINK:
+				return DecorationEscapeCodes.BLINK.getEscapeCode() + string + ResetEscapeCodes.BLINK.getEscapeCode();
+			
+			case REVERSE:
+				return DecorationEscapeCodes.REVERSE.getEscapeCode() + string + ResetEscapeCodes.REVERSE.getEscapeCode();
+			
+			case HIDDEN:
+				return DecorationEscapeCodes.HIDDEN.getEscapeCode() + string + ResetEscapeCodes.HIDDEN.getEscapeCode();
+				
+			default:
+				return string;
+				
+		}
+		
+	}
+	
 	private enum ForegroundColorEscapeCodes {
 		
 		BLACK	("\033[38;5;0m"),
@@ -98,8 +127,8 @@ public class LinuxOutputFormatter implements OutputFormatter {
 		RED		("\033[38;5;9m"),
 		ORANGE	("\033[38;5;209m"),
 		YELLOW	("\033[38;5;11m"),
-		GREEN	("\033[38;5;75m"),
-		BLUE	("\033[38;5;4m"),
+		GREEN	("\033[38;5;46m"),
+		BLUE	("\033[38;5;75m"),
 		VIOLET	("\033[38;5;207m");
 		
 		private final String escapeCode;
