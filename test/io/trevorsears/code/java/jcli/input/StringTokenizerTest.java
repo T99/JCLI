@@ -23,7 +23,7 @@ public class StringTokenizerTest {
 		
 		try {
 			
-			String[] actualOutput = StringTokenizer.tokenize(input).toArray(new String[0]);
+			String[] actualOutput = StringTokenizer.tokenize(input);
 			
 			System.out.print("And received an output of:\t[");
 			
