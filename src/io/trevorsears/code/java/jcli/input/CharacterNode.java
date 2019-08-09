@@ -15,124 +15,53 @@ public class CharacterNode {
 	private static final HashSet<Character> DELIMITER_CHARACTERS = new HashSet<>(Arrays.asList('"', '\'', '`'));
 	
 	private final char character;
-	private CharacterNode parent, child;
+	private CharacterNode last, next;
 	
-	private CharacterNode(char character, CharacterNode parent) {
+	private CharacterNode(char character, CharacterNode last) {
 		
 		this.character = character;
-		this.parent = parent;
+		this.last = last;
 		
 	}
 	
+	/**
+	 * Set the next CharacterNode for this CharacterNode to the provided CharacterNode.
+	 * 
+	 * @param next The CharacterNode to set as this CharacterNode's next/child CharacterNode.
+	 * @throws IllegalAccessException Thrown when 
+	 */
+	void setNext(CharacterNode next) throws IllegalAccessException {
+		
+		if (this.next == null) this.next = next;
+		else throw new IllegalAccessException("Cannot modify the next sequential node of a CharacterNode once it has already been set.");
+		
+	}
+	
+	/**
+	 * Constructs a linked set of CharacterNodes from a provided String, returning the root CharacterNode (i.e. the
+	 * first character represented as a CharacterNode).
+	 * 
+	 * @param string The String to convert to a linked set of CharacterNodes.
+	 * @return The root CharacterNode of the newly created linked set (i.e. the first character represented as a
+	 * CharacterNode).
+	 */
 	public static CharacterNode constructCharacterNodeString(String string) {
 		
 		if (string.length() <= 0) return null;
 		
-		CharacterNode rootNode = null;
-		CharacterNode currentNode = null;
+		char[] characters = string.toCharArray();
+		CharacterNode root = new CharacterNode(characters[0], null);
+		CharacterNode previousNode = root;
 		
-		for (int index = 0; index < string.length(); index++) {
+		for (int index = 0; index < characters.length; index++) {
 			
-			char currentCharacter = string.charAt(index);
-			
-			if (rootNode == null) {
-				
-				rootNode = new CharacterNode(currentCharacter, null);
-				currentNode = rootNode;
-				
-			} else {
-				
-				currentNode.child = new CharacterNode(currentCharacter, currentNode);
-				currentNode = currentNode.child;
-				
-			}
+			CharacterNode currentNode = new CharacterNode(characters[index], previousNode);
+			previousNode.setNext(currentNode);
+			previousNode = currentNode;
 			
 		}
 		
-		return rootNode;
-		
-	}
-	
-	char getCharacter() {
-		
-		return character;
-		
-	}
-	
-	boolean hasParent() {
-		
-		return (parent != null);
-		
-	}
-	
-	CharacterNode getParent() {
-		
-		if (hasParent()) return parent;
-		else return null;
-		
-	}
-	
-	boolean hasChild() {
-		
-		return (child != null);
-		
-	}
-	
-	CharacterNode getChild() {
-		
-		if (hasChild()) return child;
-		else return null;
-		
-	}
-	
-	String consume(char consumeTo) {
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		CharacterNode node = this;
-		while(node.hasParent() && node.getParent().getCharacter() != consumeTo) node = node.getParent();
-		
-		while(true) {
-			
-			if (!node.isEscapeCharacter()) stringBuilder.append(node.getCharacter());
-			
-			if (node.hasChild() && !node.equals(this)) node = node.getChild();
-			else {
-				
-				if (node.hasChild() && node.isIgnored()) node.getChild().parent = null;
-				break;
-				
-			}
-			
-		}
-		
-		return stringBuilder.toString().trim();
-		
-	}
-	
-	boolean isEscapeCharacter() {
-		
-		if (parent != null) return ESCAPE_CHARACTERS.contains(this.character) && !parent.isEscapeCharacter();
-		else return ESCAPE_CHARACTERS.contains(this.character);
-		
-	}
-	
-	boolean isDelimiter() {
-		
-		if (parent != null) return DELIMITER_CHARACTERS.contains(this.character) && !parent.isEscapeCharacter();
-		else return DELIMITER_CHARACTERS.contains(this.character);
-		
-	}
-	
-	boolean isWhitespace() {
-	
-		if (parent != null) return Character.isWhitespace(character) && !parent.isEscapeCharacter();
-		else return Character.isWhitespace(character);
-	
-	}
-	
-	boolean isIgnored() {
-		
-		return isEscapeCharacter() || isDelimiter() || isWhitespace();
+		return root;
 		
 	}
 	

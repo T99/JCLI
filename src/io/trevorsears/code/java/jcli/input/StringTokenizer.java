@@ -17,41 +17,8 @@ public class StringTokenizer {
 		if (string.length() == 0) return new ArrayList<>();
 		
 		ArrayList<String> tokens = new ArrayList<>();
-		CharacterNode node = CharacterNode.constructCharacterNodeString(string);
-		Character delimitedBy = null;
 		
-		while (true) {
-			
-			if (node.isWhitespace() || !node.hasChild()) {
-				
-				String expectedInput = node.consume(' ').trim();
-				if (expectedInput.length() > 0) tokens.add(expectedInput);
-				
-			}
-			
-			if (node.isDelimiter()) {
-				
-				delimitedBy = node.getCharacter();
-				
-				do {
-					
-					node = node.getChild();
-					if (node == null) throw new MalformedInputException("An unclosed delimiter occurred in the input string: '" + delimitedBy + "'.");
-					
-				} while (node.getCharacter() != delimitedBy);
-				
-				// TODO - Make the following more appropriate/automatic.
-				String output = node.consume(delimitedBy);
-				tokens.add(output.substring(1, output.length() - 1));
-				
-				delimitedBy = null;
-				
-			}
-			
-			if (node.hasChild()) node = node.getChild();
-			else break;
-			
-		}
+		
 		
 		return tokens;
 		
