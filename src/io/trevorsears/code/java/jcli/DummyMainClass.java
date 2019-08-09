@@ -9,7 +9,7 @@ package io.trevorsears.code.java.jcli;
 import io.trevorsears.code.java.jcli.commands.CommandInput;
 import io.trevorsears.code.java.jcli.commands.Flag;
 import io.trevorsears.code.java.jcli.exceptions.MalformedInputException;
-import io.trevorsears.code.java.jcli.input.CharacterNode;
+import io.trevorsears.code.java.jcli.input.CharacterProcessor;
 import io.trevorsears.code.java.jcli.input.StringTokenizer;
 import io.trevorsears.code.java.jcli.output.OutputObject;
 import io.trevorsears.code.java.jcli.output.formatting.Color;
@@ -26,27 +26,27 @@ public class DummyMainClass {
 //		JCLI jcli = JCLI.getInstance();
 	
 		while (true) {
-			
+
 			Scanner scanner = new Scanner(System.in);
-			
+
 			System.out.print("> ");
-			
+
 			try {
-				
+
 				ArrayList<String> output = StringTokenizer.tokenize(scanner.nextLine());
-				
+
 				for (String string: output) {
-					
+
 					System.out.println(string);
-					
+
 				}
-				
+
 			} catch (MalformedInputException e) {
-				
-				e.printStackTrace();
-				
+
+				System.out.println("Failed to parse input.");
+
 			}
-			
+
 		}
 		
 	}
